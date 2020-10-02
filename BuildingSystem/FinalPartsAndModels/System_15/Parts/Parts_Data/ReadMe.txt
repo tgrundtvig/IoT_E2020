@@ -3,7 +3,7 @@ Date: October 1st, 2020
 
 This folder contains all final accepted and locked-in parts. For each part, there should be exactly one OpenSCAD file named Part_xxxxxx.scad containing at leats one module named:
 
-Part_xxxxxx_vvvv_Show(simplified=false)
+Part_xxxxxx_vvvv_Show(simplify=false)
 
 Where xxxxxx is the unique agreed upon part id and vvvv is the version number for that part.
 If the part can be 3D-printet, it should also have a module named:

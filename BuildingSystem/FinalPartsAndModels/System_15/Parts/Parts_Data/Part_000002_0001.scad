@@ -4,27 +4,27 @@
 // Sourced part, non-printable
 
 
-Part_000002_0001_Show();
+Part_000002_0001_Show(false);
 
-module Part_000002_0001_Show(simplified=true)
+module Part_000002_0001_Show(simplified=false)
 {
     if(simplified)
     {
-        p_000002_0001_M3_Bolt(25, head_in=false, center=false, $fn=8)
+        p_000002_0001_M3_Bolt(25, head_in=false, center=false, $fn=8);
     }
     else
     {
-        p_000002_0001_M3_Bolt(length, head_in=false, center=false, $fn=16)
+        p_000002_0001_M3_Bolt(25, head_in=false, center=false, $fn=16);
     }
 }
 
 module p_000002_0001_M3_Bolt(length, head_in=false, center=false, $fn=$fn)
 {
     color("grey")
-    p_000002_0001_Bolt(head_diameter=5, head_height=3, bolt_diameter=3, bolt_length=length, head_in=head_in, center=center, $fn = $fn);
+    p_000002_0001_Bolt(head_diameter=5, wrench_size=2, head_height=3, bolt_diameter=3, bolt_length=length, head_in=head_in, center=center, $fn = $fn);
 }
 
-module Bolt(head_diameter, wrench_size, head_height, bolt_diameter, bolt_length,  head_in = false, center=false, $fn=$fn)
+module p_000002_0001_Bolt(head_diameter, wrench_size, head_height, bolt_diameter, bolt_length,  head_in = false, center=false, $fn=$fn)
 {
     t = center ? 
         (head_in ?
@@ -42,7 +42,7 @@ module Bolt(head_diameter, wrench_size, head_height, bolt_diameter, bolt_length,
         {
             cylinder(d=head_diameter, h=head_height, $fn=$fn);
             translate([0,0,-1])
-            cylinder(d=head_diameter, h=head_height/2+1, $fn=6);
+            cylinder(d=wrench_size, h=head_height/2+1, $fn=6);
         } 
         translate([0,0,head_height])
         cylinder(d=bolt_diameter, h=bolt_length, $fn=$fn);
