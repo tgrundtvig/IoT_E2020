@@ -1,15 +1,40 @@
-gearDist = 20;
+gearDist = 15;
 totalTeeth = 32;
-width=4;
+width=7;
 fitting = 0.2;
 
+//GearSet(width, gearDist, 8, 8, 8.4, fitting);
+/*
+for(i = [8:4:32])
+{
+    translate([0,(i-16)*20,0])
+        Gear(width, 30, 24, i, 8.4, 0.2, text=true);
+}
+*/
+//Gear(7, 30, 24, 16, 8, 0.2, text=true);
+Axel3Lock();
+translate([20,0,0])
+Axel3Spacer();
+//Axel3();
+/*
+translate([0,-10,0])
+Axel3Print(8.4, 20, 0.2);
+Axel3Print(8.6, 25, 0.2);
+translate([0,10,0])
+Axel3Print(8.8, 30, 0.2);
+
+difference()
+{
+    cylinder(d=15,h=7.5,center=true,$fn=64);
+    Axel3Cutout(8.4,8,0.4);
+}
 /*
 InsideGear(width, gearDist, totalTeeth, 32, fitting);
 translate([10,0,0])
 rotate([0,0,180/16])
 Gear(width, gearDist, totalTeeth, 16, fitting);
 
-//GearSet(width, gearDist, 8, 8, fitting);
+GearSet(width, gearDist, 8, 8, fitting);
 //PlateOfGears();
 */
 /*
@@ -49,27 +74,14 @@ for(i = [0:4])
 }
 */
 
-translate([-10,0,0])
-difference()
-{
-    cylinder(d=8,h=4,center=true,$fn=32);
-    Axel3Cutout(6, 5, 0.2);
-}
-
+/*
 translate([0,0,0])
 difference()
 {
-    cylinder(d=8,h=4,center=true,$fn=32);
-    Axel3Cutout(6, 5, 0.3);
+    cylinder(d=8,h=7.5,center=true,$fn=32);
+    Axel3Cutout(6, 9.5, 0.4);
 }
-
-translate([10,0,0])
-difference()
-{
-    cylinder(d=8,h=4,center=true,$fn=32);
-    Axel3Cutout(6, 5, 0.4);
-}
-
+*/
 
 /*
 
@@ -170,24 +182,24 @@ module SomeGears()
 
 //NewTooth2(width,height,minR,maxR);
 
-module GearSet(width, gearDist, t1, t2, fitting)
+module GearSet(width, gearDist, t1, t2, axelDiameter, fitting)
 {
     totalTeeth = t1 + t2;
-    Gear(width, gearDist, totalTeeth, t1, fitting);
+    Gear(width, gearDist, totalTeeth, t1, axelDiameter, fitting);
     translate([0,gearDist,0])
     if(t2%2==0)
     {
         rotate([0,0,180/t2])
-        Gear(width, gearDist, totalTeeth, t2, fitting);
+        Gear(width, gearDist, totalTeeth, t2, axelDiameter, fitting);
     }
     else
     {
-        Gear(width, gearDist, totalTeeth, t2, fitting);
+        Gear(width, gearDist, totalTeeth, t2, axelDiameter, fitting);
     }
 }
 
 
-module Gear(width, gearDist, totalTeeth, numTeeth, fitting, text=false)
+module Gear(width, gearDist, totalTeeth, numTeeth, axelDiameter, fitting, text=false)
 {
     teethR = 0.5*gearDist*PI/totalTeeth;
     gearR = numTeeth*gearDist/totalTeeth;
@@ -199,7 +211,7 @@ module Gear(width, gearDist, totalTeeth, numTeeth, fitting, text=false)
             {
                 rotate([0,0,i*(360/numTeeth)])
                 translate([0,gearR,0])
-                cylinder(r=teethR-fitting, h=width, center=true, $fn=16);
+                cylinder(r=teethR-fitting, h=width, center=true, $fn=32);
             }
             cylinder(r=gearR, h=width, $fn=64, center=true);
         }
@@ -207,12 +219,14 @@ module Gear(width, gearDist, totalTeeth, numTeeth, fitting, text=false)
         {
             rotate([0,0,(i+0.5)*(360/numTeeth)])
             translate([0,gearR,0])
-            cylinder(r=teethR+fitting, h=width+2, center=true, $fn=16);
+            cylinder(r=teethR+fitting, h=width+2, center=true, $fn=32);
         }
         if(text)
         {
             numberCutout(width, gearDist, totalTeeth, numTeeth);
         }
+        Axel3Cutout(axelDiameter,width+2,fitting);
+        
     }
     
         
@@ -221,15 +235,16 @@ module Gear(width, gearDist, totalTeeth, numTeeth, fitting, text=false)
 module numberCutout(width, gearDist, totalTeeth, numTeeth)
 {
     gearR = numTeeth*gearDist/totalTeeth;
-    for(a=[0:1])
+    for(a=[0:0])
     {
         rotate([0,180*a,0])
         for(b=[0:1])
         {
+            t = numTeeth > 8 ? 0.61*gearR : 0.75*gearR;
             rotate([0,0,180*b])
-            translate([0,0.5*gearR,width*0.5-1])
+            translate([0,t,width*0.5-1])
             linear_extrude(2)
-            text(text=str(numTeeth), size=gearR*0.5, halign="center", valign="center");
+            text(text=str(numTeeth), size=gearR*0.3, halign="center", valign="center");
         }
     }
 }
@@ -435,5 +450,28 @@ module AxelCutout(diameter, length, fitting)
     {
         cylinder(d=diameter+2*fitting, h=length, center=true, $fn=64);
         cube([diameter*0.93+2*fitting, diameter*0.93+2*fitting, length], center=true);
+    }
+}
+
+module Axel3Lock()
+{
+    difference()
+    {
+        cylinder(d=16, h=7, center=true, $fn=32);
+        rotate([0,0,0])
+        Axel3Cutout(8,9,0.2);
+        rotate([0,90,0])
+        cylinder(d=3.4,h=8,$fn=32);
+        translate([1.4,-2.8,-5])
+        cube([4.4,5.8,10]);
+    }
+}
+
+module Axel3Spacer()
+{
+    difference()
+    {
+        cylinder(d=15, h=7, center=true, $fn=32);
+        Axel3Cutout(8,9,0.2);
     }
 }
