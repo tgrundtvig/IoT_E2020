@@ -5,8 +5,8 @@ use <../Bolts/Bolts.scad>
 //Dimensions:
 g_unit_size = 15;
 g_bolt_diameter = 3;
-g_nut_hole_width = 5.5;
-g_nut_hole_depth = 3;
+g_nut_hole_width = 5.8;
+g_nut_hole_depth = 3.5;
 
 //Printer config
 g_fitting = 0.2;

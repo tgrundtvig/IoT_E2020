@@ -23,7 +23,7 @@ Basic_Brick(size_x=6,
 
 
 translate([-7*15,0,0])
-Basic_Brick_Print(  size_x=6,
+Basic_Brick_Print(  size_x=4,
                     size_y=2,
                     size_z=1,
                     unit_size=15,
